@@ -118,6 +118,8 @@ namespace ZeusRunner
             }
 
             if (pjavaFiltered.Count == 0 && pcmdFiltered.Count == 0) {
+                /// to create the Xml with credentials, use the following command on powershell:
+                /// Get-Credential | Export-Clixml -Path C:\Users\aguiledu\werw.xml
                 NetworkCredential credentials = FileDecrypter.Decrypt(@"C:\credZeus.xml");
                 ProcessStartInfo info = new ProcessStartInfo(@"E:\NetBeans Projects\ZeusExtractor\ZeusExtractor.bat");
                 info.UseShellExecute = false;
