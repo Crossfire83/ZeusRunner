@@ -20,7 +20,7 @@ namespace ZeusRunner
                 ServiceBase[] ServicesToRun;
                 ServicesToRun = new ServiceBase[] 
                 { 
-                    new Service1() 
+                    new ZeusRunner() 
                 };
                 ServiceBase.Run(ServicesToRun);
             #endif
