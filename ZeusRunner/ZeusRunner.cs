@@ -5,10 +5,19 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Timers;
+using Credentials;
+using System.Net;
 
 namespace ZeusRunner
 {
-    public partial class Service1 : ServiceBase
+    /// <summary>
+    /// Additional documentation on how to install the service and troubleshooting can be faound at:
+    /// https://dzone.com/articles/create-windows-services-in-c
+    /// https://stackoverflow.com/questions/2205744/error-in-installing-windows-service-developed-in-net
+    /// https://stackoverflow.com/questions/24228307/error-1053-the-service-did-not-respond-to-the-start-or-control-request-in-a-time
+    /// https://stackoverflow.com/questions/20561990/how-to-solve-the-specified-service-has-been-marked-for-deletion-error/20565337#20565337
+    /// </summary>
+    public partial class ZeusRunner : ServiceBase
     {
         /// <summary> 
         /// Required designer variable.
@@ -40,12 +49,15 @@ namespace ZeusRunner
         /// </summary>
         private void InitializeComponent()
         {
-            components = new Container();
-            this.ServiceName = "Service1";
+            // 
+            // ZeusRunner
+            // 
+            this.ServiceName = "ZeusRunner";
+
         }
         #endregion
 
-        public Service1()
+        public ZeusRunner()
         {
             InitializeComponent();
             t = new Timer
@@ -61,7 +73,8 @@ namespace ZeusRunner
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Process[] pjava = Process.GetProcessesByName("java.exe");
+            t.Stop();
+            Process[] pjava = Process.GetProcessesByName("java");
             Process[] pcmd = Process.GetProcessesByName("cmd");
             List<Process> pjavaFiltered = new List<Process>();
             List<Process> pcmdFiltered = new List<Process>();
@@ -79,7 +92,7 @@ namespace ZeusRunner
                     Console.WriteLine(userName);
                     Console.WriteLine();
                 }
-                if (userName == "auth\\perezrau") {
+                if (userName == "$rape001") {
                     pjavaFiltered.Add(proc);
                 }
             }
@@ -98,13 +111,23 @@ namespace ZeusRunner
                     Console.WriteLine(userName);
                     Console.WriteLine();
                 }
-                if (userName == "perezrau")
+                if (userName == "$rape001")
                 {
                     pcmdFiltered.Add(proc);
                 }
             }
 
-            if (pjava.Length == 0 && pcmd.Length == 0) { }
+            if (pjavaFiltered.Count == 0 && pcmdFiltered.Count == 0) {
+                NetworkCredential credentials = FileDecrypter.Decrypt(@"C:\credZeus.xml");
+                ProcessStartInfo info = new ProcessStartInfo(@"E:\NetBeans Projects\ZeusExtractor\ZeusExtractor.bat");
+                info.UseShellExecute = false;
+                info.UserName = credentials.UserName; // see the link mentioned at the top
+                info.Password = credentials.SecurePassword;
+                info.WorkingDirectory = @"E:\NetBeans Projects\ZeusExtractor";
+                info.Domain = "AUTH";
+                Process zeus = Process.Start(info);
+            }
+            t.Start();
         }
 
         protected override void OnStart(string[] args)
