@@ -123,7 +123,7 @@ namespace ZeusRunner
                 NetworkCredential credentials = FileDecrypter.Decrypt(@"C:\credZeus.xml");
                 ProcessStartInfo info = new ProcessStartInfo(@"E:\NetBeans Projects\ZeusExtractor\ZeusExtractor.bat");
                 info.UseShellExecute = false;
-                info.UserName = credentials.UserName; // see the link mentioned at the top
+                info.UserName = credentials.UserName;
                 info.Password = credentials.SecurePassword;
                 info.WorkingDirectory = @"E:\NetBeans Projects\ZeusExtractor";
                 info.Domain = "AUTH";
