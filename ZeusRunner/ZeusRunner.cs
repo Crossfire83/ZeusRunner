@@ -16,6 +16,9 @@ namespace ZeusRunner
     /// https://stackoverflow.com/questions/2205744/error-in-installing-windows-service-developed-in-net
     /// https://stackoverflow.com/questions/24228307/error-1053-the-service-did-not-respond-to-the-start-or-control-request-in-a-time
     /// https://stackoverflow.com/questions/20561990/how-to-solve-the-specified-service-has-been-marked-for-deletion-error/20565337#20565337
+    /// https://stackoverflow.com/questions/4267051/error-5-access-denied-when-starting-windows-service
+    /// https://stackoverflow.com/questions/6375622/installing-windows-service-no-mapping-between-account-names-and-security-ids
+    /// https://stackoverflow.com/questions/2205744/error-in-installing-windows-service-developed-in-net
     /// </summary>
     public partial class ZeusRunner : ServiceBase
     {
@@ -74,61 +77,68 @@ namespace ZeusRunner
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             t.Stop();
-            Process[] pjava = Process.GetProcessesByName("java");
-            Process[] pcmd = Process.GetProcessesByName("cmd");
-            List<Process> pjavaFiltered = new List<Process>();
-            List<Process> pcmdFiltered = new List<Process>();
+            //Process[] pjava = Process.GetProcessesByName("java");
+            //Process[] pcmd = Process.GetProcessesByName("cmd");
+            //List<Process> pjavaFiltered = new List<Process>();
+            //List<Process> pcmdFiltered = new List<Process>();
 
-            foreach (Process proc in pjava) {
-                IntPtr AnswerBytes, AnswerCount;
-                string userName = String.Empty;
-                if (WTSQuerySessionInformationW(WTS_CURRENT_SERVER_HANDLE,
-                                                proc.SessionId,
-                                                WTS_UserName,
-                                                out AnswerBytes,
-                                                out AnswerCount))
-                {
-                    userName = Marshal.PtrToStringUni(AnswerBytes);
-                    Console.WriteLine(userName);
-                    Console.WriteLine();
-                }
-                if (userName == "$rape001") {
-                    pjavaFiltered.Add(proc);
-                }
-            }
+            //foreach (Process proc in pjava) {
+            //    IntPtr AnswerBytes, AnswerCount;
+            //    string userName = String.Empty;
+            //    if (WTSQuerySessionInformationW(WTS_CURRENT_SERVER_HANDLE,
+            //                                    proc.SessionId,
+            //                                    WTS_UserName,
+            //                                    out AnswerBytes,
+            //                                    out AnswerCount))
+            //    {
+            //        userName = Marshal.PtrToStringUni(AnswerBytes);
+            //        Console.WriteLine(userName);
+            //        Console.WriteLine();
+            //    }
+            //    if (userName == "$rape001") {
+            //        pjavaFiltered.Add(proc);
+            //    }
+            //}
 
-            foreach (Process proc in pcmd)
-            {
-                IntPtr AnswerBytes, AnswerCount;
-                string userName = String.Empty;
-                if (WTSQuerySessionInformationW(WTS_CURRENT_SERVER_HANDLE,
-                                                proc.SessionId,
-                                                WTS_UserName,
-                                                out AnswerBytes,
-                                                out AnswerCount))
-                {
-                    userName = Marshal.PtrToStringUni(AnswerBytes);
-                    Console.WriteLine(userName);
-                    Console.WriteLine();
-                }
-                if (userName == "$rape001")
-                {
-                    pcmdFiltered.Add(proc);
-                }
-            }
+            //foreach (Process proc in pcmd)
+            //{
+            //    IntPtr AnswerBytes, AnswerCount;
+            //    string userName = String.Empty;
+            //    if (WTSQuerySessionInformationW(WTS_CURRENT_SERVER_HANDLE,
+            //                                    proc.SessionId,
+            //                                    WTS_UserName,
+            //                                    out AnswerBytes,
+            //                                    out AnswerCount))
+            //    {
+            //        userName = Marshal.PtrToStringUni(AnswerBytes);
+            //        Console.WriteLine(userName);
+            //        Console.WriteLine();
+            //    }
+            //    if (userName == "$rape001")
+            //    {
+            //        pcmdFiltered.Add(proc);
+            //    }
+            //}
 
-            if (pjavaFiltered.Count == 0 && pcmdFiltered.Count == 0) {
-                /// to create the Xml with credentials, use the following command on powershell:
-                /// Get-Credential | Export-Clixml -Path C:\Users\aguiledu\werw.xml
-                NetworkCredential credentials = FileDecrypter.Decrypt(@"C:\credZeus.xml");
-                ProcessStartInfo info = new ProcessStartInfo(@"E:\NetBeans Projects\ZeusExtractor\ZeusExtractor.bat");
-                info.UseShellExecute = false;
-                info.UserName = credentials.UserName;
-                info.Password = credentials.SecurePassword;
-                info.WorkingDirectory = @"E:\NetBeans Projects\ZeusExtractor";
-                info.Domain = "AUTH";
-                Process zeus = Process.Start(info);
-            }
+            //if (pjavaFiltered.Count == 0 && pcmdFiltered.Count == 0) {
+            /// to create the Xml with credentials, use the following command on powershell:
+            /// Get-Credential | Export-Clixml -Path C:\Users\aguiledu\werw.xml
+                try
+                {
+                    NetworkCredential credentials = FileDecrypter.Decrypt(@"C:\credZeus.xml");
+                    ProcessStartInfo info = new ProcessStartInfo(@"E:\NetBeans Projects\ZeusExtractor\ZeusExtractor.bat");
+                    info.UseShellExecute = false;
+                    info.UserName = credentials.UserName;
+                    info.Password = credentials.SecurePassword;
+                    info.WorkingDirectory = @"E:\NetBeans Projects\ZeusExtractor";
+                    info.Domain = "AUTH";
+                    Process zeus = Process.Start(info);
+                }
+                catch (Exception ex)
+                {
+                    Logs.Log.saveLogFile(Environment.CurrentDirectory + "Error", ex.ToString());
+                }
+            //}
             t.Start();
         }
 
