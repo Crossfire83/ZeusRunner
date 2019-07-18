@@ -1,5 +1,5 @@
-﻿using Credentials;
-using System.Net;
+﻿//using Credentials;
+//using System.Net;
 
 namespace ZeusRunner
 {
@@ -36,10 +36,10 @@ namespace ZeusRunner
             // 
             // serviceProcessInstaller1
             // 
-            this.serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.User;
-            NetworkCredential credentials = FileDecrypter.Decrypt(@"C:\credZeus.xml");
-            this.serviceProcessInstaller1.Password = credentials.Password;
-            this.serviceProcessInstaller1.Username = "AUTH\\" + credentials.UserName;
+            this.serviceProcessInstaller1.Account = System.ServiceProcess.ServiceAccount.LocalService;
+            //NetworkCredential credentials = FileDecrypter.Decrypt(@"C:\credZeus.xml");
+            //this.serviceProcessInstaller1.Password = credentials.Password;
+            //this.serviceProcessInstaller1.Username = "AUTH\\" + credentials.UserName;
             // 
             // serviceInstaller1
             // 

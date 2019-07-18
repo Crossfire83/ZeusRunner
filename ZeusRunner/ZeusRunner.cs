@@ -66,13 +66,12 @@ namespace ZeusRunner
             t = new Timer
             {
             #if DEBUG
-                Interval = 60000
+                Interval = 300
             #else
-                Interval = 120000
+                Interval = 300000
             #endif
             };
             t.Elapsed += Timer_Elapsed;
-            EventLog.Log = "ZeusRunnerLog";
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -137,7 +136,7 @@ namespace ZeusRunner
                 }
                 catch (Exception ex)
                 {
-                    EventLog.WriteEntry("Error", ex.ToString());
+                    Logs.Log.saveLogFile(Environment.CurrentDirectory + "Error", ex.ToString());
                 }
             //}
             t.Start();
@@ -159,5 +158,12 @@ namespace ZeusRunner
         {
             OnStart(null);
         }
+
+        [DllImport("Wtsapi32.dll")]
+        public static extern bool WTSQuerySessionInformationW(IntPtr hServer,
+            int SessionId,
+            int WTSInfoClass,
+            out IntPtr ppBuffer,
+            out IntPtr pBytesReturned);
     }
 }
