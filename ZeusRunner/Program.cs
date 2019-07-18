@@ -1,6 +1,4 @@
-﻿using System.ServiceProcess;
-
-namespace ZeusRunner
+﻿namespace ZeusRunner
 {
     static class Program
     {
