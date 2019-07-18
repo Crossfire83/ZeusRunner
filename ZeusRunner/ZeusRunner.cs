@@ -68,7 +68,7 @@ namespace ZeusRunner
             #if DEBUG
                 Interval = 300
             #else
-                Interval = 300000
+                Interval = 120000
             #endif
             };
             t.Elapsed += Timer_Elapsed;
