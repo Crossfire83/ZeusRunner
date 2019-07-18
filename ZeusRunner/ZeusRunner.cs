@@ -136,8 +136,11 @@ namespace ZeusRunner
                 }
                 catch (Exception ex)
                 {
-                    Logs.Log.saveLogFile(Environment.CurrentDirectory + "Error", ex.ToString());
-                }
+                ///to view the errors caused by this, you need to launch 
+                ///eventvwr > Windows Logs > Application, then filter by source, 
+                ///which is the first parameter of the statement below
+                EventLog.WriteEntry("ZeusError", ex.ToString());
+            }
             //}
             t.Start();
         }
